@@ -35,6 +35,7 @@
    "_FOSSIL_"
    ".bzr"
    "_darcs"
+   ".jj"
    )
   "A list of directory names to be seen as project roots.
   Sans trailing slash.")
