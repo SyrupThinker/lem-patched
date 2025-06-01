@@ -130,15 +130,22 @@
                     ;; (assert-type value type)
                     value))))))))
 
+(defun coerce-slot-value (value type)
+  "Prepares class slot values for usage with yason."
+  (case type
+    ('lem-lsp-base/type:lsp-boolean (if value yason:true yason:false))
+    (otherwise value)))
+
 (defmethod convert-to-json ((object protocol-object))
   (loop :with hash-table := (make-hash-table :test 'equal)
         :for slot :in (protocol-class-slots (class-of object))
         :for slot-name := (c2mop:slot-definition-name slot)
+        :for slot-type := (c2mop:slot-definition-type slot)
         :when (slot-boundp object slot-name)
         :do (let ((value (slot-value object slot-name))
                   (key (lisp-to-pascal-case (string slot-name))))
               (setf (gethash key hash-table)
-                    (convert-to-json value)))
+                    (convert-to-json (coerce-slot-value value slot-type))))
         :finally (return hash-table)))
 
 (defmethod convert-to-json ((object string))
