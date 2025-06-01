@@ -31,8 +31,9 @@
 
 (defun icon-string (name)
   (let ((icon (gethash name *icon-name-table*)))
-    (when icon
-      (string (code-char (icon-code icon))))))
+    (if icon
+        (string (code-char (icon-code icon)))
+        "")))
 
 (defun icon-string-by-ext (ext)
   (let ((name (gethash ext *icon-ext-table*)))
