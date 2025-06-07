@@ -308,3 +308,16 @@
                                                           filename))
             (when buffer
               (switch-to-buffer buffer t nil))))))))
+
+(define-command project-clean () ()
+  "Remove deleted project directories from the list of saved projects."
+  (let ((history (history))
+        (deletions 0))
+    (loop for project in (lem/common/history:history-data-list history)
+          unless (directory-root-p project)
+          do (progn
+               (lem/common/history:remove-history history project)
+               (incf deletions)))    
+    (lem/common/history:save-file history)
+    (message "~a project(s) removed." deletions)))
+      
