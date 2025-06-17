@@ -156,7 +156,7 @@
              (init-application-icon window)
              (sdl2:with-renderer (renderer window :index -1 :flags '(:accelerated))
                (let* ((renderer-size (multiple-value-list
-                                               (sdl2:get-renderer-output-size renderer)))
+                                      (sdl2:get-renderer-output-size renderer)))
                       (renderer-width (first renderer-size))
                       (renderer-height (second renderer-size))
                       (scale-x (/ renderer-width window-width))
@@ -211,15 +211,17 @@
       (sdl2:set-hint :no-signal-handlers 1)
       ;; sdl2 should not disable the kwin compositor, since lem editor is not a game, and disable it will not bring noticeale performance improvement.
       (sdl2:set-hint :video-x11-net-wm-bypass-compositor 0)
+      ;; sdl2 should not disable the screensaver, since lem editor is not a game
+      (sdl2:set-hint :video-allow-screensaver 1)
 
       (tmt:with-body-in-main-thread ()
         (sdl2:make-this-thread-main (lambda ()
                                       (handler-bind
                                           (#+(and linux sbcl)
-                                              (sb-sys:interactive-interrupt
-                                               (lambda (c)
-                                                 (declare (ignore c))
-                                                 (invoke-restart 'sdl2::abort))))
+                                           (sb-sys:interactive-interrupt
+                                             (lambda (c)
+                                               (declare (ignore c))
+                                               (invoke-restart 'sdl2::abort))))
                                         (progn
                                           (create-display #'thunk)
                                           (when (sbcl-on-darwin-p)
