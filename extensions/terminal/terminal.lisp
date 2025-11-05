@@ -65,7 +65,10 @@
 (defun create (&key (rows (alexandria:required-argument :rows))
                     (cols (alexandria:required-argument :cols))
                     (buffer (alexandria:required-argument :buffer))
-                    (directory (alexandria:required-argument :directory)))
+                    (directory (alexandria:required-argument :directory))
+                    (foreground-color (alexandria:required-argument :foreground-color))
+                    (background-color (alexandria:required-argument :background-color))
+                    (palette (alexandria:required-argument :palette)))
   (declare (type (string) directory)
            (type (integer) rows)
            (type (integer) cols))
@@ -77,6 +80,12 @@
                           :buffer buffer
                           :rows rows
                           :cols cols)))
+    (loop :for color :in palette
+          :for index :from 0
+          :do (ffi::terminal-set-palette-color (terminal-viscus terminal) index (color-red color) (color-green color) (color-blue color)))
+    (ffi::terminal-set-default-colors (terminal-viscus terminal)
+                                      (color-red foreground-color) (color-green foreground-color) (color-blue foreground-color)
+                                      (color-red background-color) (color-green background-color) (color-blue background-color))
     (let ((queue (queue:make-concurrent-queue)))
       (setf (terminal-thread terminal)
             (bt2:make-thread

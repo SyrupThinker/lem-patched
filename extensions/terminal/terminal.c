@@ -186,6 +186,25 @@ struct terminal *terminal_new(int id,
   return terminal;
 }
 
+void terminal_set_default_colors(struct terminal *terminal,
+                                 uint8_t fg_r, uint8_t fg_g, uint8_t fg_b,
+                                 uint8_t bg_r, uint8_t bg_g, uint8_t bg_b)
+{
+  VTermState *state = vterm_obtain_state(terminal->vterm);
+  VTermColor fg, bg;
+  vterm_color_rgb(&fg, fg_r, fg_g, fg_b);
+  vterm_color_rgb(&bg, bg_r, bg_g, bg_b);
+  vterm_state_set_default_colors(state, &fg, &bg);
+}
+
+void terminal_set_palette_color(struct terminal *terminal, int index, uint8_t r, uint8_t g, uint8_t b)
+{
+  VTermState *state = vterm_obtain_state(terminal->vterm);
+  VTermColor color;
+  vterm_color_rgb(&color, r, g, b);
+  vterm_state_set_palette_color(state, index, &color);
+}
+
 void terminal_delete(struct terminal *terminal)
 {
   vterm_free(terminal->vterm);

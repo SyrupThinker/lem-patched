@@ -54,6 +54,25 @@
 (define-key *terminal-mode-keymap* "C-x [" 'terminal-copy-mode-on)
 (define-key *terminal-copy-mode-keymap* "Escape" 'terminal-copy-mode-off)
 
+(defun derive-color-palette ()
+  "Derive the ANSI color palette from the current theme."
+  ;; FIXME(st): There is probably a better way
+  (mapcar #'parse-color (list (lem-core::base-color :base00)
+                              (lem-core::base-color :base01)
+                              (lem-core::base-color :base02)
+                              (lem-core::base-color :base03)
+                              (lem-core::base-color :base04)
+                              (lem-core::base-color :base05)
+                              (lem-core::base-color :base06)
+                              (lem-core::base-color :base07)
+                              (lem-core::base-color :base08)
+                              (lem-core::base-color :base09)
+                              (lem-core::base-color :base0a)
+                              (lem-core::base-color :base0b)
+                              (lem-core::base-color :base0c)
+                              (lem-core::base-color :base0d)
+                              (lem-core::base-color :base0e))))
+
 (defun buffer-terminal (buffer)
   (buffer-value buffer 'terminal))
 
@@ -64,7 +83,10 @@
   (declare (type (string) buffer-directory))
   (let* ((buffer (make-buffer (unique-buffer-name "*Terminal*") :enable-undo-p nil))
          (terminal (terminal:create :cols 80 :rows 24 :buffer buffer
-                                    :directory buffer-directory)))
+                                    :directory buffer-directory
+                                    :foreground-color (parse-color (lem-core:foreground-color))
+                                    :background-color (parse-color (lem-core:background-color))
+                                    :palette (derive-color-palette))))
     (setf (buffer-terminal buffer) terminal)
     (change-buffer-mode buffer 'terminal-mode)
     buffer))
