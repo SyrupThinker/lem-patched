@@ -22,7 +22,7 @@
         #'<
         :key (lambda (command)
                (sb-c:definition-source-location-toplevel-form-number
-		(lem-core::command-source-location command)))))
+                   (lem-core::command-source-location command)))))
 
 (defun collect-commands-in-package (package)
   (let ((commands '()))
