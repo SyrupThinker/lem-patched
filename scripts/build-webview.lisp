@@ -1,4 +1,4 @@
-(ql:quickload :lem-webview)
+(asdf:load-system :lem-webview)
 
 (lem:init-at-build-time)
 

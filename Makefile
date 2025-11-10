@@ -1,4 +1,4 @@
-LISP ?= sbcl --dynamic-space-size 4GiB --noinform --no-sysinit --no-userinit
+LISP ?= sbcl --dynamic-space-size 4GiB --noinform
 PREFIX ?= /usr/local
 VARIANT ?= webview
 
@@ -13,9 +13,7 @@ sdl2:
 		--load scripts/build-sdl2.lisp
 
 sdl2-ncurses:
-	qlot install
-	$(LISP) --load .qlot/setup.lisp \
-		--load scripts/build-sdl2-ncurses.lisp
+	$(LISP) --load scripts/build-sdl2-ncurses.lisp
 
 server:
 	qlot install
@@ -28,9 +26,7 @@ client:
 		--load scripts/build-client.lisp
 
 webview:
-	qlot install
-	$(LISP) --load .qlot/setup.lisp \
-		--load scripts/build-webview.lisp
+	$(LISP) --load scripts/build-webview.lisp
 
 webview-ncurses:
 	qlot install

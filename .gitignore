@@ -41,3 +41,6 @@ build/*
 TODO
 artifacts/
 logs/
+
+/ocicl/
+/ocicl.csv
