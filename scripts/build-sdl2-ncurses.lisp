@@ -1,5 +1,6 @@
-(ql:quickload :lem-sdl2)
-(ql:quickload :lem-ncurses)
+(require 'asdf)
+(asdf:load-system :lem-sdl2)
+(asdf:load-system :lem-ncurses)
 
 (lem:init-at-build-time)
 
