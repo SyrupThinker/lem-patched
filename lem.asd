@@ -295,7 +295,8 @@
                #+sbcl
                "lem-living-canvas"
                "lem-tree-sitter"
-               "lem-typst-mode"))
+               "lem-typst-mode"
+               "lem-toml-mode"))
 
 (defsystem "lem"
   :version "2.3.0"
