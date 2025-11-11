@@ -290,7 +290,8 @@
                "lem-copilot"
                "lem-claude-code"
                "lem-bookmark"
-               "lem-typst-mode"))
+               "lem-typst-mode"
+               "lem-toml-mode"))
 
 (defsystem "lem"
   :version "2.3.0"
