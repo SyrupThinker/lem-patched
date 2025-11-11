@@ -131,11 +131,11 @@
       (loop for key in *find-programs*
             for name = (str:downcase (string key))
             if (eql :lisp key)
-              do (setf *find-program* :lisp)
+            do (setf *find-program* :lisp)
             else do
-              (when (exist-program-p name)
-                (setf *find-program* key)
-                (return key)))))
+               (when (exist-program-p name)
+                 (setf *find-program* key)
+                 (return key)))))
 
 (defun parse-find-program-output (output)
   (mapcar #'namestring
@@ -217,7 +217,7 @@
                       :directory (buffer-directory)
                       :default nil
                       :existing nil))))
-    (let ((candidates (get-files-recursively-with-timeout (find-program))))
+    (let ((candidates (cons "." (get-files-recursively-with-timeout (find-program)))))
       (prompt-for-string
        "File: "
        :completion-function (lambda (x) (completion-files x candidates))
