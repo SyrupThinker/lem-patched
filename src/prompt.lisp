@@ -175,14 +175,15 @@ When set to false, the completion list only opens when the user presses TAB")
                      (directory
                       (merge-pathnames "**/lem-*.asd"
                                        (asdf:system-source-directory :lem-contrib))))
-             (set-difference
-              (mapcar #'pathname-name
-                      (loop for i in (ql-symbol-value :*local-project-directories*)
-                            append (directory (merge-pathnames "**/lem-*.asd" i))))
-              (mapcar #'pathname-name
-                      (directory (merge-pathnames "**/lem-*.asd"
-                                                  (asdf:system-source-directory :lem))))
-              :test #'equal))))
+             (when (find-package '#:QUICKLISP)
+               (set-difference
+                (mapcar #'pathname-name
+                        (loop for i in (ql-symbol-value :*local-project-directories*)
+                              append (directory (merge-pathnames "**/lem-*.asd" i))))
+                (mapcar #'pathname-name
+                        (directory (merge-pathnames "**/lem-*.asd"
+                                                    (asdf:system-source-directory :lem)))))
+               :test #'equal))))
       (setq systems (mapcar (lambda (x) (subseq x 4)) systems))
       (prompt-for-string prompt
                          :completion-function (lambda (str) (completion str systems))
