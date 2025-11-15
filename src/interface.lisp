@@ -231,13 +231,19 @@ When rendering the DOM and a window in a one-to-one manner, no redraw is require
   (lem-if:invoke implementation function))
 
 (defun lem-if:get-font-by-name-and-style (name style)
-  "GET-FONT-BY-NAME-AND-STYLE searches for a font with NAME in the path and ends with STYLE"
+  "GET-FONT-BY-NAME-AND-STYLE searches for a font with NAME in the path and ends with STYLE.
+
+If no such font is found, search by full NAME."
   (flet ((equal-downcase (s1 s2) (equal (string-downcase s1) (string-downcase s2))))
     (let ((fonts (loop :for font in (lem-if:get-font-list (implementation))
                        :for style-termination := (format nil "~a." style)
+                       :for fallback-termination := (format nil "~a." name)
                        :when (and (search name font :test #'equal-downcase)
                                   (search style-termination font :test #'equal-downcase))
-                       :collect font)))
+                       :collect (cons font 0)
+                       :when (search fallback-termination font :test #'equal-downcase)
+                       :collect (cons font 1))))
+      (setf fonts (sort fonts #'< :key #'cdr))
       (if fonts
-          (car fonts)
+          (caar fonts)
           (error "font not found for font-name=~s and style=~s" name style)))))
