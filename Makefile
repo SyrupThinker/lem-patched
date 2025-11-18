@@ -7,6 +7,9 @@ ncurses:
 	$(LISP) --load .qlot/setup.lisp \
 		--load scripts/build-ncurses.lisp
 
+notcurses:
+	$(LISP) --load scripts/build-notcurses.lisp
+
 sdl2:
 	qlot install
 	$(LISP) --load .qlot/setup.lisp \

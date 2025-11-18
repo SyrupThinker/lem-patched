@@ -129,9 +129,7 @@ See scripts/build-ncurses.lisp or scripts/build-sdl2.lisp"
          (apply-args args))
         (t
          (let* ((implementation-keyword (or (command-line-arguments-interface args)
-                                            (if (interactive-stream-p *standard-input*)
-                                                :ncurses
-                                                :sdl2)))
+                                            :notcurses))
                 (implementation (get-default-implementation
                                  :implementation
                                  implementation-keyword)))
