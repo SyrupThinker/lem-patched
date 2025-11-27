@@ -133,9 +133,9 @@ If the file is a relative path, it is relative to LEM-HOME.")
   (%bookmark-update
    entry
    :new-filename (buffer-filename buffer)
-   :new-position (if no-position
-                     nil
-                     (position-at-point (buffer-point buffer)))))
+   :position (if no-position
+                 nil
+                 (position-at-point (buffer-point buffer)))))
 
 (defun %bookmark-apply-position (entry buffer)
   (when (bookmark-position entry)
