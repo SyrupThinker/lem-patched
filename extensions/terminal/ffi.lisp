@@ -110,6 +110,22 @@
                    (cffi:callback cb-sb-pushline)
                    (cffi:callback cb-sb-popline))))
 
+(cffi:defcfun ("terminal_set_default_colors" terminal-set-default-colors) :void
+  (terminal :pointer)
+  (fg-r :uint8)
+  (fg-g :uint8)
+  (fg-b :uint8)
+  (bg-r :uint8)
+  (bg-g :uint8)
+  (bg-b :uint8))
+
+(cffi:defcfun ("terminal_set_palette_color" terminal-set-palette-color) :void
+  (terminal :pointer)
+  (index :int)
+  (r :uint8)
+  (g :uint8)
+  (b :uint8))
+
 (cffi:defcfun ("terminal_delete" terminal-delete) :void
   (terminal :pointer))
 

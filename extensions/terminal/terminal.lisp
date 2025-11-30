@@ -7,6 +7,7 @@
            :destroy
            :copy-mode-on
            :copy-mode-off
+           :set-palette
            :clear
            :render
            :update
@@ -62,10 +63,25 @@
     (render terminal)
     (redraw-display)))
 
+(defun set-palette (terminal palette foreground background)
+  (setf foreground (parse-color foreground)
+        background (parse-color background))
+  (loop :for color-name :in palette
+        :for index :from 0
+        :for color := (parse-color color-name)
+        :when color
+        :do (ffi::terminal-set-palette-color (terminal-viscus terminal) index (color-red color) (color-green color) (color-blue color)))
+  (ffi::terminal-set-default-colors (terminal-viscus terminal)
+                                    (color-red foreground) (color-green foreground) (color-blue foreground)
+                                    (color-red background) (color-green background) (color-blue background)))
+
 (defun create (&key (rows (alexandria:required-argument :rows))
                     (cols (alexandria:required-argument :cols))
                     (buffer (alexandria:required-argument :buffer))
-                    (directory (alexandria:required-argument :directory)))
+                    (directory (alexandria:required-argument :directory))
+                    (foreground-color (alexandria:required-argument :foreground-color))
+                    (background-color (alexandria:required-argument :background-color))
+                    (palette (alexandria:required-argument :palette)))
   (declare (type (string) directory)
            (type (integer) rows)
            (type (integer) cols))
@@ -77,6 +93,7 @@
                           :buffer buffer
                           :rows rows
                           :cols cols)))
+    (set-palette terminal palette foreground-color background-color)
     (let ((queue (queue:make-concurrent-queue)))
       (setf (terminal-thread terminal)
             (bt2:make-thread

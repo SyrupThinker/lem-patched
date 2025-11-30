@@ -106,18 +106,24 @@ for example, to maintain an attribute like CURSOR.")
 (defun get-color-theme-color (color-theme key)
   (second (assoc key (color-theme-specs color-theme))))
 
-(defun background-color ()
-  (when (current-theme)
-    (get-color-theme-color (find-color-theme (current-theme)) :background)))
+(defun background-color (&optional (theme (current-theme)))
+  (alexandria:when-let ((theme (find-color-theme theme)))
+    (alexandria:if-let ((color (get-color-theme-color theme :background)))
+      color
+      (background-color (color-theme-parent theme)))))
 
-(defun foreground-color ()
-  (when (current-theme)
-    (get-color-theme-color (find-color-theme (current-theme)) :foreground)))
+(defun foreground-color (&optional (theme (current-theme)))
+  (alexandria:when-let ((theme (find-color-theme theme)))
+    (alexandria:if-let ((color (get-color-theme-color theme :foreground)))
+      color
+      (foreground-color (color-theme-parent theme)))))
 
-(defun base-color (name)
+(defun base-color (name &optional (theme (current-theme)))
   (check-type name base-color)
-  (when (current-theme)
-    (get-color-theme-color (find-color-theme (current-theme)) name)))
+  (alexandria:when-let ((theme (find-color-theme theme)))
+    (alexandria:if-let ((color (get-color-theme-color theme name)))
+      color
+      (base-color name (color-theme-parent theme)))))
 
 (defun ensure-color (color)
   (typecase color
