@@ -54,6 +54,24 @@
 (define-key *terminal-mode-keymap* "C-x [" 'terminal-copy-mode-on)
 (define-key *terminal-copy-mode-keymap* "Escape" 'terminal-copy-mode-off)
 
+(defun derive-color-palette ()
+  "Derive the ANSI color palette from the current theme."
+  (list (lem-core::ensure-color :base00)
+        (lem-core::ensure-color :base01)
+        (lem-core::ensure-color :base02)
+        (lem-core::ensure-color :base03)
+        (lem-core::ensure-color :base04)
+        (lem-core::ensure-color :base05)
+        (lem-core::ensure-color :base06)
+        (lem-core::ensure-color :base07)
+        (lem-core::ensure-color :base08)
+        (lem-core::ensure-color :base09)
+        (lem-core::ensure-color :base0a)
+        (lem-core::ensure-color :base0b)
+        (lem-core::ensure-color :base0c)
+        (lem-core::ensure-color :base0d)
+        (lem-core::ensure-color :base0e)))
+
 (defun buffer-terminal (buffer)
   (buffer-value buffer 'terminal))
 
@@ -64,7 +82,10 @@
   (declare (type (string) buffer-directory))
   (let* ((buffer (make-buffer (unique-buffer-name "*Terminal*") :enable-undo-p nil))
          (terminal (terminal:create :cols 80 :rows 24 :buffer buffer
-                                    :directory buffer-directory)))
+                                    :directory buffer-directory
+                                    :foreground-color (lem-core::ensure-color (foreground-color))
+                                    :background-color (lem-core::ensure-color (background-color))
+                                    :palette (derive-color-palette))))
     (setf (buffer-terminal buffer) terminal)
     (change-buffer-mode buffer 'terminal-mode)
     buffer))
@@ -198,9 +219,19 @@
     (loop :for c :across string
           :do (terminal:input-character terminal c))))
 
+(defun on-theme-load ()
+  (dolist (terminal terminal::*terminals*)
+    (terminal:set-palette terminal
+                          (derive-color-palette)
+                          (lem-core::ensure-color (foreground-color))
+                          (lem-core::ensure-color (background-color)))))
+
 (defun on-window-size-change (window)
   (alexandria:when-let (terminal (buffer-terminal (window-buffer window)))
     (resize-terminal terminal window)))
+
+(add-hook *after-load-theme-hook*
+          'on-theme-load)
 
 (add-hook *window-size-change-functions*
           'on-window-size-change)
