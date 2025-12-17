@@ -296,7 +296,8 @@
                "lem-living-canvas"
                "lem-tree-sitter"
                "lem-typst-mode"
-               "lem-toml-mode"))
+               "lem-toml-mode"
+               "lem-zig-mode"))
 
 (defsystem "lem"
   :version "2.3.0"
